@@ -1,5 +1,17 @@
 {
-    "require": {
-        "stripe/stripe-php": "^23.0"
-    }
+    "name": "onaboka/ecommerce-api",
+    "description": "E-commerce REST API built with PHP 8.5 and PostgreSQL",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Oleh Naboka"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
 }
