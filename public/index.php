@@ -1,14 +1,36 @@
 <?php
 
-require_once "../vendor/autoload.php";
+require_once __DIR__ . '/../vendor/autoload.php';
 
-use App\Services\ProductService;
+use App\Database\DatabaseConnection;
+use Dotenv\Dotenv;
+
+
+$dotenv = Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv->load();
 
 header('Content-Type: application/json');
 
-$productService = new ProductService();
+try {
+	$database = new DatabaseConnection();
 
-echo json_encode([
-	'message' => $productService->getMessage(),
-	'php_version' => PHP_VERSION,
-]);
+	$connection = $database->connect();
+
+	$statement = $connection->query(
+		'SELECT current_database(), current_user, version()'
+	);
+
+	$result = $statement->fetch();
+
+	echo json_encode([
+		'message' => 'Database connection successful!',
+		'database' => $result['current_database'],
+		'user' => $result['current_user'],
+		'postgresql_version' => $result['version'],
+	], JSON_PRETTY_PRINT);
+
+} catch (PDOException $exception) {
+	error_log('Database error: ' . $exception->getMessage());
+
+	throw $exception;
+}
